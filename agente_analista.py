@@ -6,7 +6,7 @@ NOME_ARQUIVO_SAIDA = "edital_completo.txt"
 # --- FIM DA CONFIGURAÇÃO ---
 
 try:  # tente abrir o arquivo PDF
-    doc = fitz.open(NOME_ARQUIVO_PDF)
+    doc = fitz.open(NOME_ARQUIVO_PDF)  # biblioteca de leitura de pdf abrir o pdf
 except Exception as e:  # se der erro, avise o usuário
     print(f"ERRO: Não foi possível abrir o arquivo '{NOME_ARQUIVO_PDF}'.")
     print(f"Detalhe do erro: {e}")
@@ -14,33 +14,39 @@ except Exception as e:  # se der erro, avise o usuário
     exit()
 
 print(
-    f"PDF '{NOME_ARQUIVO_PDF}' aberto com sucesso! O documento tem {doc.page_count} páginas."
+    f"PDF '{NOME_ARQUIVO_PDF}' aberto com sucesso! O documento tem {doc.page_count} páginas."  # f string  que mostra o nome do arquivoe suas paginas
 )
 print("Iniciando a extração de texto...")
 
-texto_completo = ""
+texto_completo = ""  # slva o texto nessa variavel
 
 
-for pagina in doc:
+for pagina in doc:  # para cada pagina no documento
 
-    texto_completo += pagina.get_text()  # type: ignore
+    texto_completo += pagina.get_text()  # type: ignore #texto completo recebe o texto da pagina atual
 
 print("\nExtração finalizada com sucesso!")
 
-print("\n--- EXTRAINDO SEÇÃO DO OBJETO ---")
+print("\n--- EXTRAINDO SEÇÃO DO resumo ---")
 
-inicio_objeto = texto_completo.find("1. DO OBJETO")
-fim_objeto = texto_completo.find(
-    "2. DA IMPUGNAÇÃO AO EDITAL E DO PEDIDO DE ESCLARECIMENTO"
-)
+# EXTRAIR APENAS A SEÇÃO DO resumo
 
-if inicio_objeto != -1 and fim_objeto != -1:
-    texto_do_objeto = texto_completo[inicio_objeto:fim_objeto]
-    print("Seção do objeto extraída com sucesso:")
-    print(texto_do_objeto)
+inicio_resumo = texto_completo.find(
+    "PROCESSO ELETRÔNICO"
+)  # encontra o inicio do resumo na variavel texto completo
+fim_resumo = texto_completo.find(
+    "1. DO OBJETO"
+)  # procura o fim do resumo na variavel texto completo
+
+if inicio_resumo != -1 and fim_resumo != -1:  # se encontrar o inicio e o fim do resumo
+    texto_do_resumo = texto_completo[
+        inicio_resumo:fim_resumo
+    ]  # extrai o texto que ensta entre o inicio e o fim do resumo
+    print("Seção do resumo extraída com sucesso:")
+    print(texto_do_resumo)
 else:
     print(
-        "ERRO: Não foi possível delimitar a seção do objeto com os marcadores definidos."
+        "ERRO: Não foi possível delimitar a seção do resumo com os marcadores definidos."
     )
 
 try:  # tente salvar o texto extraído em um arquivo
