@@ -8,7 +8,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 def analisar_documento(
     caminho_do_arquivo: str,
 ) -> (
-    str | None
+    dict | None
 ):  # parametro caminho do arquivo do tipo string, com retorno string ou None
     # Carrega as variáveis de ambiente do arquivo .env
     load_dotenv()
@@ -113,37 +113,34 @@ Data e Horário da Realização: [texto ou "não informado"]
         posicoes_encontradas.items(), key=lambda item: item[1]
     )  # secoes ordenadas recebe a lista de posicoes.items que sao os itens com a chave e o valor, ordenados pela posicao (item[1])
 
-    analises_profundas = ""
+    # --- Extração das Seções ---
+    print("AGENTE 1: Iniciando extração de seções por texto...")
+    secoes_extraidas = {}  # Criamos um dicionário vazio para guardar as seções
 
     for i, secao_atual in enumerate(secoes_ordenadas):
         nome_secao = secao_atual[0]
         posicao_inicio = secao_atual[1]
+
+        # Define o fim da seção
         posicao_fim = None
         if i + 1 < len(secoes_ordenadas):
-            posicao_fim = secoes_ordenadas[i + 1][1]
+            posicao_fim = secoes_ordenadas[i + 1][1]  # Pega o início da próxima seção
 
-        trecho_da_secao = texto_completo[posicao_inicio:posicao_fim]
+        # Extrai o trecho de texto puro
+        trecho_da_secao = texto_completo[posicao_inicio:posicao_fim].strip()  # .strip() remove espaços em branco
 
-        # Criamos o promp para esta seção
-        prompt_secao = f"""
-        Analise o seguinte trecho da seção '{nome_secao}' de um edital e faça um resumo dos pontos mais importantes para um auditor.
+        if trecho_da_secao:
+            print(f"  - Extraído texto da seção: '{nome_secao}'")
+            # Adiciona o texto puro ao nosso dicionário
+            secoes_extraidas[nome_secao] = trecho_da_secao
+        else:
+            print(f"  - Seção '{nome_secao}' encontrada, mas sem conteúdo extraível.")
+    print("AGENTE 1: Compilando resultado estruturado.")
+    resultado_estruturado = {
+        "resumo_cabecalho": resposta_resumo_ia,
+        "texto_integral": texto_completo,
+        "secoes_extraidas": secoes_extraidas
+    }
 
-        Trecho:
-        ---
-        {trecho_da_secao[:4000]} # Limitamos para garantir que não estoura a janela de contexto
-        ---
-        """
+    return resultado_estruturado
 
-        # Bloco para análise profunda e por seção.
-        try:
-            print(f"AGENTE 1: Analisando seção '{nome_secao}' com a IA...")
-            resposta_secao_ia = llm.invoke(prompt_secao)
-            analises_profundas += f"\n\n--- Análise da Seção: {nome_secao} ---\n{resposta_secao_ia.content}\n"
-        except Exception as e:
-            print(f"ERRO ao analisar a seção '{nome_secao}'. Detalhe: {e}")
-
-            analises_profundas += (
-                f"\n\n--- Análise da Seção: {nome_secao} ---\nERRO NA ANÁLISE: {e}\n"
-            )
-    resultado_final_combinado = resposta_resumo_ia + analises_profundas  # type: ignore
-    return resultado_final_combinado

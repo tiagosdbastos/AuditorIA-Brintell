@@ -13,7 +13,7 @@ def pesquisar_legislacao(analise_agente_1: str) -> str | None: #Essa linha
     llm = ChatGoogleGenerativeAI(
         google_api_key=google_api_key,
         model="gemini-2.5-flash",
-        temperature=0.1,
+        temperature=0.0,
         convert_system_message_to_human=True,
     )
 
