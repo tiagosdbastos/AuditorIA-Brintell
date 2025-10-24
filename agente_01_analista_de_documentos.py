@@ -89,10 +89,10 @@ Data e Horário da Realização: [texto ou "não informado"]
         # --- Busca por seções ---
     # Lista de "pistas" (títulos de seções) que vamos procurar no texto completo.
     pistas = [
-        "DO OBJETO",
-        "DA PARTICIPAÇÃO NA LICITAÇÃO",
-        "DA APRESENTAÇÃO DA PROPOSTA",
-        "DO TERMO DE CONTRATO",
+        ". DO OBJETO",
+        ". DA PARTICIPAÇÃO NA LICITAÇÃO",
+        ". DA APRESENTAÇÃO DA PROPOSTA",
+        ". DO TERMO DE CONTRATO"
     ]
     posicoes_encontradas = {}
     for pista in pistas:  # para cada pista na lista de pistas
@@ -112,21 +112,36 @@ Data e Horário da Realização: [texto ou "não informado"]
     secoes_ordenadas = sorted(
         posicoes_encontradas.items(), key=lambda item: item[1]
     )  # secoes ordenadas recebe a lista de posicoes.items que sao os itens com a chave e o valor, ordenados pela posicao (item[1])
-    for i, secao_atual in enumerate(
-        secoes_ordenadas
-    ):  # para cada secao atual na lista de secoes ordenadas, com o indice i
-        nome_secao = secao_atual[
-            0
-        ]  # nome da secao atual recebe o primeiro item da secao atual (o nome da secao)
-        posicao_inicio = secao_atual[
-            1
-        ]  # posicao inicio recebe o segundo item da secao atual (a posicao da secao)
+
+    analises_profundas = ""
+
+    for i, secao_atual in enumerate(secoes_ordenadas):
+        nome_secao = secao_atual[0]
+        posicao_inicio = secao_atual[1]
         posicao_fim = None
         if i + 1 < len(secoes_ordenadas):
             posicao_fim = secoes_ordenadas[i + 1][1]
-        trecho_da_secao = texto_completo[posicao_inicio:posicao_fim]
-        print(f"\n--- CONTEÚDO DA SEÇÃO: {nome_secao} ---")
-        print(trecho_da_secao)
-        print("----------------------------------------")
 
-    return resposta_resumo_ia  # type: ignore
+        trecho_da_secao = texto_completo[posicao_inicio:posicao_fim]
+
+        # Criamos o promp para esta seção
+        prompt_secao = f"""
+        Analise o seguinte trecho da seção '{nome_secao}' de um edital e faça um resumo dos pontos mais importantes para um auditor.
+
+        Trecho:
+        ---
+        {trecho_da_secao[:4000]} # Limitamos para garantir que não estoura a janela de contexto
+        ---
+        """
+
+        # Bloco para análise profunda e por seção.
+        try:
+            print(f"AGENTE 1: Analisando seção '{nome_secao}' com a IA...")
+            resposta_secao_ia = llm.invoke(prompt_secao)
+            analises_profundas += f"\n\n--- Análise da Seção: {nome_secao} ---\n{resposta_secao_ia.content}\n"
+        except Exception as e:
+            print(f"ERRO ao analisar a seção '{nome_secao}'. Detalhe: {e}")
+
+            analises_profundas += f"\n\n--- Análise da Seção: {nome_secao} ---\nERRO NA ANÁLISE: {e}\n"
+    resultado_final_combinado = resposta_resumo_ia + analises_profundas
+    return resultado_final_combinado
