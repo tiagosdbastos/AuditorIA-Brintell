@@ -92,7 +92,7 @@ Data e Horário da Realização: [texto ou "não informado"]
         ". DO OBJETO",
         ". DA PARTICIPAÇÃO NA LICITAÇÃO",
         ". DA APRESENTAÇÃO DA PROPOSTA",
-        ". DO TERMO DE CONTRATO"
+        ". DO TERMO DE CONTRATO",
     ]
     posicoes_encontradas = {}
     for pista in pistas:  # para cada pista na lista de pistas
@@ -142,6 +142,8 @@ Data e Horário da Realização: [texto ou "não informado"]
         except Exception as e:
             print(f"ERRO ao analisar a seção '{nome_secao}'. Detalhe: {e}")
 
-            analises_profundas += f"\n\n--- Análise da Seção: {nome_secao} ---\nERRO NA ANÁLISE: {e}\n"
-    resultado_final_combinado = resposta_resumo_ia + analises_profundas
+            analises_profundas += (
+                f"\n\n--- Análise da Seção: {nome_secao} ---\nERRO NA ANÁLISE: {e}\n"
+            )
+    resultado_final_combinado = resposta_resumo_ia + analises_profundas  # type: ignore
     return resultado_final_combinado
