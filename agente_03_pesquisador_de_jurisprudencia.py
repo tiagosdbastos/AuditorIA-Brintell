@@ -37,7 +37,6 @@ def _criar_query_cql(contexto_objeto: str, llm: ChatGoogleGenerativeAI) -> str:
     Query CQL:
     """
 
-
     try:
         query_gerada = llm.invoke(prompt_cql).content
         print(f"AGENTE 3 (IA): Query gerada: {query_gerada}")
@@ -47,7 +46,9 @@ def _criar_query_cql(contexto_objeto: str, llm: ChatGoogleGenerativeAI) -> str:
         return "tipo=jurisprudencia"
 
 
-def _formatar_resultados_lexml(resultados_json: list, llm: ChatGoogleGenerativeAI) -> str:
+def _formatar_resultados_lexml(
+    resultados_json: list, llm: ChatGoogleGenerativeAI
+) -> str:
 
     print("AGENTE 3 (IA): Formatando resultados do LexML...")
 
@@ -77,22 +78,24 @@ def _formatar_resultados_lexml(resultados_json: list, llm: ChatGoogleGenerativeA
     Query CQL:
     """
 
-
     try:
         resposta_formatada = llm.invoke(prompt_formatacao).content
-        return resposta_formatada
+        return resposta_formatada  # type: ignore
     except Exception as e:
         print(f"ERRO (Agente 3 - IA): Falha ao formatar. {e}")
         return "Erro ao formatar resultados da jurisprudência."
 
+
 # --- Função Principal do Agente ---
-def pesquisar_jurisprudencia(contexto_objeto: str) -> (str|None):
+def pesquisar_jurisprudencia(contexto_objeto: str) -> str | None:
     print("AGENTE 3: Iniciando pesquisa de jurisprudência no LexML...")
 
     load_dotenv()
     google_api_key = os.getenv("GOOGLE_API_KEY")
     if not google_api_key:
-        print("ERRO (Agente 3): Chave GOOGLE_API_KEY não encontrada.") # Corrigido para Agente 3
+        print(
+            "ERRO (Agente 3): Chave GOOGLE_API_KEY não encontrada."
+        )  # Corrigido para Agente 3
         return None
     llm = ChatGoogleGenerativeAI(
         google_api_key=google_api_key,
@@ -111,23 +114,29 @@ def pesquisar_jurisprudencia(contexto_objeto: str) -> (str|None):
 
         base_url = "https://www.lexml.gov.br/busca/SRU"
         params = {
-            'operation': 'searchRetrieve',
-            'version': '1.1',
-            'query': query_cql,
-            'maximumRecords': '5'
+            "operation": "searchRetrieve",
+            "version": "1.1",
+            "query": query_cql,
+            "maximumRecords": "5",
         }
 
         print(f"AGENTE 3 (LexML): Executando busca direta com query: {query_cql}")
-        response = requests.get( base_url , params=params )
+        response = requests.get(base_url, params=params)
         response.raise_for_status()
-        data_dict = xmltodict.parse(response.content )
+        data_dict = xmltodict.parse(response.content)
 
         # --- Processar os Resultados ---
-        records = data_dict.get('searchRetrieveResponse', {}).get('records', {}).get('record', [])
+        records = (
+            data_dict.get("searchRetrieveResponse", {})
+            .get("records", {})
+            .get("record", [])
+        )
         if not isinstance(records, list):
             records = [records]
 
-        print(f"AGENTE 3 (LexML): Busca concluída. {len(records)} resultados encontrados.")
+        print(
+            f"AGENTE 3 (LexML): Busca concluída. {len(records)} resultados encontrados."
+        )
 
         if not records:
             return "Nenhuma jurisprudência relevante encontrada no LexML para esta consulta."
@@ -137,10 +146,14 @@ def pesquisar_jurisprudencia(contexto_objeto: str) -> (str|None):
         return relatorio_formatado
 
     except requests.exceptions.RequestException as e:
-        print(f"ERRO (Agente 3 - Request): Falha ao conectar com API do LexML. Detalhe: {e}")
+        print(
+            f"ERRO (Agente 3 - Request): Falha ao conectar com API do LexML. Detalhe: {e}"
+        )
         return "Erro de conexão ao buscar jurisprudência no LexML."
-    except xmltodict.expat.ExpatError as e:
-        print(f"ERRO (Agente 3 - XML): Falha ao processar XML da resposta do LexML. Detalhe: {e}")
+    except xmltodict.expat.ExpatError as e:  # type: ignore
+        print(
+            f"ERRO (Agente 3 - XML): Falha ao processar XML da resposta do LexML. Detalhe: {e}"
+        )
         return "Erro ao processar a resposta da busca de jurisprudência."
     except Exception as e:
         print(f"ERRO (Agente 3 - Geral): Falha inesperada. Detalhe: {e}")
