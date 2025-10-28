@@ -127,7 +127,9 @@ Data e Horário da Realização: [texto ou "não informado"]
             posicao_fim = secoes_ordenadas[i + 1][1]  # Pega o início da próxima seção
 
         # Extrai o trecho de texto puro
-        trecho_da_secao = texto_completo[posicao_inicio:posicao_fim].strip()  # .strip() remove espaços em branco
+        trecho_da_secao = texto_completo[
+            posicao_inicio:posicao_fim
+        ].strip()  # .strip() remove espaços em branco
 
         if trecho_da_secao:
             print(f"  - Extraído texto da seção: '{nome_secao}'")
@@ -139,8 +141,7 @@ Data e Horário da Realização: [texto ou "não informado"]
     resultado_estruturado = {
         "resumo_cabecalho": resposta_resumo_ia,
         "texto_integral": texto_completo,
-        "secoes_extraidas": secoes_extraidas
+        "secoes_extraidas": secoes_extraidas,
     }
 
     return resultado_estruturado
-

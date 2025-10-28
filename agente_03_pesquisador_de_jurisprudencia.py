@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 import requests
 import xmltodict
-from apis.acervo import LexmlAcervo
+from auditoria_brintell.external_apis.lexml import LexmlAcervo
 
 
 def _criar_query_cql(contexto_objeto: str, llm: ChatGoogleGenerativeAI) -> str:
@@ -125,7 +125,7 @@ def pesquisar_jurisprudencia(contexto_objeto: str) -> str | None:
             base_url,
             params=params,
             timeout=(10, 30),
-            proxies={'http': None, 'https': None}
+            proxies={"http": None, "https": None},  # type: ignore
         )
         response.raise_for_status()
         data_dict = xmltodict.parse(response.content)
