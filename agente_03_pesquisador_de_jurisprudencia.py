@@ -40,7 +40,7 @@ def _criar_query_cql(contexto_objeto: str, llm: ChatGoogleGenerativeAI) -> str:
     try:
         query_gerada = llm.invoke(prompt_cql).content
         print(f"AGENTE 3 (IA): Query gerada: {query_gerada}")
-        return query_gerada
+        return query_gerada  # type: ignore
     except Exception as e:
         print(f"ERRO (Agente 3 - IA): Falha ao gerar query. {e}")
         return "tipo=jurisprudencia"

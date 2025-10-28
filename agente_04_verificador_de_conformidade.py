@@ -3,7 +3,10 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 import json
 
-def verificar_conformidade( secoes_extraidas: dict, legislacao_aplicavel: str, jurisprudencia_relevante: str) -> ( str | None):
+
+def verificar_conformidade(
+    secoes_extraidas: dict, legislacao_aplicavel: str, jurisprudencia_relevante: str
+) -> str | None:
     print("AGENTE 4: Iniciando verificação de conformidade...")
 
     load_dotenv()
@@ -61,10 +64,10 @@ Para cada ponto identificado:
 
 Formato da resposta (obrigatório):
 
-1. [Ponto de atenção / risco]  
+1. [Ponto de atenção / risco]
    Justificativa breve, citando Seção X do edital e/ou Art. Y da Lei 14.133/2021 (ou jurisprudência Z).
 
-2. [Ponto de atenção / risco]  
+2. [Ponto de atenção / risco]
    Justificativa breve [...]
 
 (3 a 5 itens)
@@ -79,8 +82,10 @@ Formato da resposta (obrigatório):
     try:
         analise_riscos = llm.invoke(prompt_analise).content
         print("AGENTE 4: Análise de conformidade recebida.")
-        return analise_riscos
+        return analise_riscos  # type: ignore
     except Exception as e:
-        print(f"ERRO (Agente 4): Falha ao realizar análise de conformidade. Detalhe: {e}")
+        print(
+            f"ERRO (Agente 4): Falha ao realizar análise de conformidade. Detalhe: {e}"
+        )
         # Retorne None
         return None
