@@ -2,7 +2,8 @@
 from agente_01_analista_de_documentos import analisar_documento
 from agente_02_pesquisador_de_legislacao import pesquisar_legislacao
 from agente_03_pesquisador_de_jurisprudencia import pesquisar_jurisprudencia
-from agente_04_verificador_de_conformidade import verificar_conformidade # <- Importação do Agente 4
+from agente_04_verificador_de_conformidade import verificar_conformidade
+from agente_05_sintetizador_de_relatorio import sintetizar_relatorio
 import json
 
 # Nome do arquivo PDF a ser analisado
@@ -62,6 +63,25 @@ if __name__ == "__main__":
                 print("\n--- ORQUESTRADOR: Resultado da Verificação de Conformidade (Agente 4) ---")
                 print(resultado_agente_4) # Imprime a análise de riscos
                 print("-------------------------------------------------------------------------")
+                # --- Etapa 5: Chamar Agente 5 ---
+                print("\n--- ORQUESTRADOR: Acionando Agente 5 (Sintetizador de Relatório)... ---")
+
+                # Chama o Agente 5 passando todos os resultados anteriores
+                relatorio_final = sintetizar_relatorio(
+                    resumo_edital=resumo_cabecalho,  # Do Agente 1
+                    legislacao=resultado_agente_2,  # Do Agente 2
+                    jurisprudencia=resultado_agente_3,  # Do Agente 3
+                    analise_riscos=resultado_agente_4  # Do Agente 4
+                )
+
+                # Verifica e imprime o Relatório Final
+                if relatorio_final:
+                    print("\n--- ORQUESTRADOR: Relatório Final Gerado (Agente 5) ---")
+                    print(relatorio_final)  # Imprime o relatório em Markdown
+                    print("-------------------------------------------------------")
+                else:
+                    # Isso não deve acontecer se a função retornar uma string, mas é uma segurança
+                    print("--- ORQUESTRADOR: Falha na geração do relatório final pelo Agente 5. ---")
             else:
                 print("--- ORQUESTRADOR: Falha na verificação de conformidade do Agente 4. ---")
 

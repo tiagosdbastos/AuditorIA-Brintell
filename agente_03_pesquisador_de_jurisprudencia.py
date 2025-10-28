@@ -121,7 +121,12 @@ def pesquisar_jurisprudencia(contexto_objeto: str) -> str | None:
         }
 
         print(f"AGENTE 3 (LexML): Executando busca direta com query: {query_cql}")
-        response = requests.get(base_url, params=params)
+        response = requests.get(
+            base_url,
+            params=params,
+            timeout=(10, 30),
+            proxies={'http': None, 'https': None}
+        )
         response.raise_for_status()
         data_dict = xmltodict.parse(response.content)
 
