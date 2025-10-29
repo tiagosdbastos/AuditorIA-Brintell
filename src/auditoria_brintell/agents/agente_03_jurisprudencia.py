@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 import requests
 import xmltodict
-from auditoria_brintell.external_apis.lexml import LexmlAcervo
+from ..external_apis.lexml import LexmlAcervo
 
 
 def _criar_query_cql(contexto_objeto: str, llm: ChatGoogleGenerativeAI) -> str:

@@ -1,13 +1,15 @@
-# Importa as funções de cada agente
-from agente_01_analista_de_documentos import analisar_documento
-from agente_02_pesquisador_de_legislacao import pesquisar_legislacao
-from agente_03_pesquisador_de_jurisprudencia import pesquisar_jurisprudencia
-from agente_04_verificador_de_conformidade import verificar_conformidade
-from agente_05_sintetizador_de_relatorio import sintetizar_relatorio
+from auditoria_brintell.agents.agente_01_analista import analisar_documento
+from auditoria_brintell.agents.agente_02_legislacao import pesquisar_legislacao
+from auditoria_brintell.agents.agente_03_jurisprudencia import pesquisar_jurisprudencia
+from auditoria_brintell.agents.agente_04_conformidade import verificar_conformidade
+from auditoria_brintell.agents.agente_05_sintetizador import sintetizar_relatorio
 import json
+import os
 
-# Nome do arquivo PDF a ser analisado
-NOME_ARQUIVO_PDF = "edital_teste.pdf"
+BASE_DIR = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)  # Vai para a raiz do projeto (AuditoriaIA-Brintell)
+NOME_ARQUIVO_PDF = os.path.join(BASE_DIR, "data", "edital_teste.pdf")
 
 if __name__ == "__main__":
     print("--- ORQUESTRADOR: INICIANDO FLUXO DE ANÁLISE ---")
