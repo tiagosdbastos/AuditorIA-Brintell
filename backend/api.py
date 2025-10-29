@@ -1,10 +1,10 @@
-import tempfile
 import logging
-import uvicorn
-from fastapi import FastAPI
 import os
 import shutil
-from fastapi import UploadFile, File, HTTPException
+import tempfile
+
+import uvicorn
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from src.auditoria_brintell.main import executar_fluxo_auditoria
 
 logging.basicConfig(
