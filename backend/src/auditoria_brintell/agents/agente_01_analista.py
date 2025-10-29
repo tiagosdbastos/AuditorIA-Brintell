@@ -32,7 +32,7 @@ def analisar_documento(
     print("AGENTE 1: Texto completo extraído com sucesso.")
 
     # --- Extração do Bloco de Resumo ---
-    primeira_pagina_texto = doc[0].get_text()
+    primeira_pagina_texto = doc[0].get_text()  # ignore
     bloco_resumo = primeira_pagina_texto
     print("AGENTE 1: Bloco de resumo (primeira página) extraído com sucesso.")
     # --- Interação com a IA ---
