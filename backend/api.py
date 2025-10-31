@@ -3,8 +3,8 @@ import os
 import shutil
 import tempfile
 
-import uvicorn
-from fastapi import FastAPI, File, HTTPException, UploadFile
+import uvicorn  # type: ignore
+from fastapi import FastAPI, File, HTTPException, UploadFile  # type: ignore
 from src.auditoria_brintell.main import executar_fluxo_auditoria
 
 logging.basicConfig(
