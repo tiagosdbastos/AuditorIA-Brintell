@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import ReportCard from "./ReportCard";
+import ReactMarkdown from "react-markdown";
 
 export default function ReportView({ report, onNewAnalysis }) {
   const reportRef = useRef();
@@ -23,27 +24,7 @@ export default function ReportView({ report, onNewAnalysis }) {
 
       <div className="report-content" ref={reportRef}>
         <div className="report-columns">
-          <ReportCard title="Resumo do Edital">
-            <p><strong>Objeto:</strong> {report.resumo.objeto}</p>
-            <p><strong>Modalidade:</strong> {report.resumo.modalidade}</p>
-            <p><strong>Valor Estimado:</strong> {report.resumo.valor}</p>
-          </ReportCard>
-
-          <ReportCard title="Cláusulas de Risco">
-            <ul>{report.riscos.map((r, i) => <li key={i}>{r}</li>)}</ul>
-          </ReportCard>
-
-          <ReportCard title="Legislação Aplicável">
-            <ul>{report.legislacao.map((l, i) => <li key={i}>{l}</li>)}</ul>
-          </ReportCard>
-
-          <ReportCard title="Jurisprudência Relevante">
-            <ul>{report.jurisprudencia.map((j, i) => <li key={i}>{j}</li>)}</ul>
-          </ReportCard>
-
-          <ReportCard title="Conclusão" className="conclusion">
-            <p>{report.conclusao}</p>
-          </ReportCard>
+          <ReactMarkdown>{report.relatorio_final}</ReactMarkdown>
         </div>
       </div>
 

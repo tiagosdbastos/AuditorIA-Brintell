@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import UploadArea from "../components/UploadArea";
 
 export default function Home({ onReportGenerated }) {
@@ -12,31 +12,29 @@ export default function Home({ onReportGenerated }) {
     }
     setLoading(true);
 
-    setTimeout(() => {
-      const fakeReport = {
-        resumo: {
-          objeto: "Aquisição de materiais de informática",
-          modalidade: "Pregão Eletrônico",
-          valor: "R$ 250.000,00",
-        },
-        riscos: [
-          "Exigência excessiva de atestados técnicos",
-          "Prazo de entrega inferior a 5 dias úteis",
-        ],
-        legislacao: [
-          "Lei nº 14.133/2021 — Nova Lei de Licitações",
-          "Decreto nº 10.024/2019 — Pregão Eletrônico",
-        ],
-        jurisprudencia: [
-          "Acórdão 1234/2023 - TCE/SP — Prazos exíguos violam a isonomia",
-          "Decisão 456/2022 - TCU — Restrições técnicas desproporcionais",
-        ],
-        conclusao:
-          "O edital apresenta cláusulas potencialmente restritivas e deve ser revisado antes da publicação.",
-      };
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("http://localhost:8000/analisar-edital/", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Ocorreu um erro no servidor.");
+      }
+
+      const data = await response.json();
+
+      onReportGenerated(data);
+    } catch (error) {
+      console.error("Erro ao chamar API:", error);
+      alert(`Erro: ${error.message}`);
+    } finally {
       setLoading(false);
-      onReportGenerated(fakeReport);
-    }, 1800);
+    }
   };
 
   return (

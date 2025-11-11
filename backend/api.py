@@ -5,6 +5,7 @@ import tempfile
 
 import uvicorn  # type: ignore
 from fastapi import FastAPI, File, HTTPException, UploadFile  # type: ignore
+from fastapi.middleware.cors import CORSMiddleware
 from src.auditoria_brintell.main import executar_fluxo_auditoria
 
 logging.basicConfig(
@@ -16,6 +17,20 @@ logger = logging.getLogger(__name__)
 
 
 app = FastAPI(title="Auditor-IA API")
+# Lista de "origens" (endereços) que têm permissão para aceder à tua API
+origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # Permite as origens da lista
+    allow_credentials=True,  # Permite cookies (útil para o futuro)
+    allow_methods=["*"],  # Permite todos os métodos (GET, POST, etc.)
+    allow_headers=["*"],  # Permite todos os cabeçalhos
+)
 
 
 @app.get("/")
