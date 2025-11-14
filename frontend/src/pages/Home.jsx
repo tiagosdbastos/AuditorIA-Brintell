@@ -16,10 +16,13 @@ export default function Home({ onReportGenerated }) {
     formData.append("file", file);
 
     try {
-      const response = await fetch("http://localhost:8000/analisar-edital/", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        "https://auditoria-brintell.onrender.com/analisar-edital/",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();

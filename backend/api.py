@@ -22,6 +22,7 @@ origins = [
     "http://localhost:5173",
     "http://localhost:3000",
     "http://localhost",
+    "https://auditor-ia-brintell.vercel.app",
 ]
 
 app.add_middleware(
