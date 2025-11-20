@@ -5,25 +5,23 @@ def sintetizar_relatorio(resumo_edital: str, legislacao: str, jurisprudencia: st
 
 
     relatorio_markdown = f"""
-# Relatório de Análise Preliminar do Edital
-
-## 1. Resumo do Edital (Extraído pelo Agente 1)
+## 1. Resumo do Edital
 
 **Pontos-chave:**
 {resumo_edital}
-## 2. Legislação Aplicável (Identificada pelo Agente 2)
+## 2. Legislação Aplicável
 
 **Artigos/Seções relevantes da Lei nº 14.133/2021 sugeridos para verificação:**
 
 {legislacao}
 
-## 3. Jurisprudência Relevante (Pesquisada pelo Agente 3 via LexML)
+## 3. Jurisprudência Relevante
 
 **Precedentes relacionados (ou status da busca):**
 
 {jurisprudencia}
 
-## 4. Análise Crítica Preliminar (Realizada pelo Agente 4)
+## 4. Análise Crítica Preliminar
 
 **Pontos de Atenção, Riscos Potenciais e Possíveis Não Conformidades Identificadas:**
 

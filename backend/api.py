@@ -60,5 +60,5 @@ async def analisar_edital(file: UploadFile = File(...)):
 
 
 if __name__ == "__main__":
-    print("Iniciando servidor FastAPI em http://localhost:8000")
+    print("Servidor Abeerto na porta 8000")
     uvicorn.run("api:app", host="0.0.0.0", port=8000, reload=True)
